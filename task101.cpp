@@ -3,7 +3,7 @@
 
 #define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 600
-int radius=100;
+int radius=200;
 // Global variables
 bool gameIsRunning = false;
 SDL_Window *window = NULL;
@@ -82,13 +82,13 @@ void drawcircle(int cx, int cy, int r)
 void draw()
 {
     // Set the render draw color (R, G, B, A)
-    SDL_SetRenderDrawColor(renderer, 0, 103, 71,0);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
     // Clear the renderer with the specified draw color
     SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer,218, 41, 28, 0);
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
-    drawcircle(SCREEN_WIDTH/2,SCREEN_HEIGHT/2,100);
+    drawcircle(SCREEN_WIDTH/2,SCREEN_HEIGHT/2,200);
 
     // Present the renderer (draw the frame to the window)
     SDL_RenderPresent(renderer);
