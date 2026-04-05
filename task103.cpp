@@ -6,7 +6,7 @@
 using namespace std;
 
 #define SCREEN_WIDTH 1080
-#define SCREEN_HEIGHT 720
+#define SCREEN_HEIGHT 600
 
 // Core system
 bool gameIsRunning = false;
@@ -16,8 +16,8 @@ SDL_Renderer* renderer = NULL;
 // Enemy (auto moving circle)
 int enemyX = 0;
 int enemyY = SCREEN_HEIGHT / 2;
-int enemyRadius = 50;
-int enemySpeed = 30;
+int enemyRadius = 100;
+int enemySpeed = 25;
 
 // Player (controlled circle)
 int playerX = SCREEN_WIDTH / 2;
@@ -170,4 +170,4 @@ int main(int argc, char* argv[])
     destroyWindow();
     return 0;
 }
-//g++ task103.cpp -I"C:/Users/mdzak/OneDrive/Desktop/sdl/include" -L"C:/Users/mdzak/OneDrive/Desktop/sdl/lib" -lmingw32 -lSDL2main -lSDL2 -o task103.exe ; ./task103.exe
+// //g++ task103.cpp -I"C:/Users/mdzak/OneDrive/Desktop/sdl/include" -L"C:/Users/mdzak/OneDrive/Desktop/sdl/lib" -lmingw32 -lSDL2main -lSDL2 -o task103.exe ; ./task103.exe
