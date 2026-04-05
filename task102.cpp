@@ -1,30 +1,33 @@
+
 #include <SDL2/SDL.h>
 #include <stdio.h>
 
 #define SCREEN_WIDTH 1000
 #define SCREEN_HEIGHT 600
-int radius=200;
+
+int radius = 100;
+int initialRadius = 100;
+float radiusSpeed = 100.0f; // pixels per second
+
 // Global variables
 bool gameIsRunning = false;
 SDL_Window *window = NULL;
 SDL_Renderer *renderer = NULL;
-int redColorCode = 0;
-Uint32 startTime;
-Uint32 currentTime;
+
+Uint32 lastTime = 0;
+Uint32 currentTime = 0;
+float deltaTime = 0;
 
 bool initializeWindow(void)
 {
-    // Initialize SDL with video support
-    // Automatically initializes the Event Handling, File I/O and Threading subsystems
     if (SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         printf("Error: SDL failed to initialize\nSDL Error: '%s'\n", SDL_GetError());
         return false;
     }
 
-    // Create an SDL window
     window = SDL_CreateWindow(
-        "SDL Introduction",
+        "Task_102",
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH,
@@ -37,36 +40,31 @@ bool initializeWindow(void)
         return false;
     }
 
-    // Create an SDL renderer for rendering graphics in the window
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
     if (!renderer)
     {
         printf("Error: Failed to create renderer\nSDL Error: '%s'\n", SDL_GetError());
         return false;
     }
+
     return true;
 }
 
 void process_input(void)
 {
-    // Poll SDL events (e.g., window close)
     SDL_Event event;
     while (SDL_PollEvent(&event))
     {
-        switch (event.type)
+        if (event.type == SDL_QUIT)
         {
-        case SDL_QUIT:
-            gameIsRunning = false; // Exit the game loop
-            break;
-
-        default:
-            break;
+            gameIsRunning = false;
         }
     }
 }
+
 void drawcircle(int cx, int cy, int r)
 {
-    // Filled circle using equation check
     for (int y = -r; y <= r; y++)
     {
         for (int x = -r; x <= r; x++)
@@ -79,22 +77,30 @@ void drawcircle(int cx, int cy, int r)
     }
 }
 
-void draw()
+void update()
 {
-    // Set the render draw color (R, G, B, A)
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    currentTime = SDL_GetTicks();
+    deltaTime = (currentTime - lastTime) / 1000.0f;
+    lastTime = currentTime;
 
-    // Clear the renderer with the specified draw color
-    SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    radius += radiusSpeed * deltaTime;
 
-    drawcircle(SCREEN_WIDTH/2,SCREEN_HEIGHT/2,200);
-
-    // Present the renderer (draw the frame to the window)
-    SDL_RenderPresent(renderer);
+    if (radius >= SCREEN_WIDTH / 2 || radius >= SCREEN_HEIGHT / 2)
+    {
+        radius = initialRadius;
+    }
 }
 
+void draw()
+{
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
 
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    drawcircle(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, radius);
+
+    SDL_RenderPresent(renderer);
+}
 
 void destroyWindow(void)
 {
@@ -105,23 +111,17 @@ void destroyWindow(void)
 
 int main(int argc, char **argv)
 {
-    // The game loop control variable
     gameIsRunning = initializeWindow();
-    startTime = SDL_GetTicks();
+    lastTime = SDL_GetTicks();
 
-    // Game loop: keep the application running until 'running' is set to false
     while (gameIsRunning)
     {
-        // Continuously polls for SDL events
         process_input();
-
-        // Draw the rendered window
+        update();
         draw();
     }
 
-    // Clean up and exit the application
     destroyWindow();
-
     return 0;
 }
-//  //g++ task101.cpp -I"C:/Users/mdzak/OneDrive/Desktop/sdl/include" -L"C:/Users/mdzak/OneDrive/Desktop/sdl/lib" -lmingw32 -lSDL2main -lSDL2 -o task101.exe ; ./task101.exe
+//g++ task102.cpp -I"C:/Users/mdzak/OneDrive/Desktop/sdl/include" -L"C:/Users/mdzak/OneDrive/Desktop/sdl/lib" -lmingw32 -lSDL2main -lSDL2 -o task102.exe ; ./task102.exe
